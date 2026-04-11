@@ -3,6 +3,8 @@ from tkinter import ttk
 import subprocess
 import os
 
+FONT_FAMILY = "Helvetica"
+
 class MainDashboard:
     def __init__(self, root):
         self.root = root
@@ -26,19 +28,25 @@ class MainDashboard:
 
         # Dictionary of tools: Button Text -> Python Script
         self.tools = {
-            "1. Facebook Scraper (General)": "facebook_scraper_gui.py",
-            "2. Scraping Data (New Scraper)": "new_scrapper.py",
-            "3. Telecom Complaints Scraper": "telecom_complaints_scraper_gui.py",
-            "4. CSV Merger (Isku darka CSV)": "csv_merger_gui.py",
-            "5. Data Validator (Hubinta Xogta)": "data_validator_gui.py",
-            "6. Data Separator (Kala saarista Crime/Not Crime)": "data_separator.py",
-            "7. Split Crime Data (Isku miisaanid)": "split_crime_data.py",
-            "8. Crime Only Filter": "scrape_crime_only_gui.py",
-            "9. Not Crime Only Filter": "scrape_not_crime_only_gui.py"
+            "1. News & Social Scraper": "news_scraper_gui.py",
+            "2. Facebook Crime Scraper": "facebook_scraper_gui.py",
+            "3. Crime Filter Tool (Nadiifinta Crime)": "CrimeFilterTool.py",
+            "4. Not Crime Filter": "not_crime_filter_gui.py",
+            "5. Split Crime Data (Kala Saar)": "split_crime_data.py",
+            "6. CSV Merger (Isku darka CSV)": "csv_merger_gui.py",
+            "7. Data Validator (Hubinta Xogta)": "data_validator_gui.py",
+            "8. Data Separator": "data_separator.py",
+            "──────── DATABASE ────────────": None,
+            "🗄️  Database Dashboard (Xogta & CSV Download)": "db_dashboard.py",
         }
 
         # Create Buttons dynamically
         for text, script in self.tools.items():
+            if script is None:
+                # Separator / divider label
+                tk.Label(btn_frame, text=text, font=(FONT_FAMILY, 9),
+                         bg="#f0f0f0", fg="#999999").pack(pady=(8, 2))
+                continue
             btn = ttk.Button(btn_frame, text=text, command=lambda s=script: self.launch_script(s), width=50)
             btn.pack(pady=5, ipady=5)
 

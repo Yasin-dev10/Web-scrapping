@@ -11,6 +11,7 @@ from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 from datetime import datetime
 import re
+import shared_db
 
 # ── fix Windows console encoding ──────────────────────────────────────────────
 if hasattr(sys.stdout, "reconfigure"):
@@ -193,13 +194,21 @@ class CrimeFilterApp(tk.Tk):
             output_p = f"{base}_CRIME_ONLY_{ts}{ext}"
             df_filtered.to_csv(output_p, index=False, encoding="utf-8-sig")
             
+            # ── Keydi Database-ka
+            try:
+                rows = df_filtered[['url','text','category']].to_dict('records')
+                shared_db.insert_many(rows, source="CrimeFilter")
+                db_msg = f" | Database: {len(rows)} la keydiyey"
+            except Exception as db_err:
+                db_msg = f" | DB khatar: {db_err}"
+            
             # 5. Result message
-            self._lbl_status.configure(text=f"✅ Nadiifintu waa dhammaatay! ({total_after} rows / {total_before} total)", fg=GREEN)
+            self._lbl_status.configure(text=f"✅ Nadiifintu waa dhammaatay! ({total_after} rows / {total_before} total){db_msg}", fg=GREEN)
             
             msg = f"Nadiifintii waa dhammaatay!\n\n" \
                   f"Filter-ka waxaa soo maray: {total_after} posts\n" \
                   f"Waxaa la tirtiray: {removed} posts\n\n" \
-                  f"Faylka waa la keydiyey!"
+                  f"Faylka waa la keydiyey!\n{db_msg}"
             messagebox.showinfo("Success", msg)
             
         except Exception as e:

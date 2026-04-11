@@ -5,6 +5,7 @@ news_scraper_gui.py  —  Universal News & Social Media Scraper
 Run:  python -X utf8 news_scraper_gui.py
 """
 import os, sys, time, re, threading, json, random
+import shared_db
 from urllib.parse import urljoin, urlparse
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -673,6 +674,14 @@ class ScraperGUI(tk.Tk):
             self._log_msg(f"✅  Saved {len(self._items)} items → {path}", "info")
         except Exception as ex:
             self._log_msg(f"❌  Save error: {ex}", "err")
+
+        # ── Keydi Database-ka ──────────────────────────────────────────────
+        try:
+            source = "News-" + self._platform_var.get().replace(" ", "_")
+            shared_db.insert_many(self._items, source=source)
+            self._log_msg(f"🗄️  Database: {len(self._items)} xog ayaa lagu keydiiyey (source={source})", "info")
+        except Exception as ex:
+            self._log_msg(f"⚠️  Database error: {ex}", "warn")
 
     def _on_done(self):
         self._set_running(False)

@@ -1,58 +1,112 @@
-# Facebook Keyword Scraper
+# 🗄️ All-In-One Web Scraper & Crime Data Dashboard
 
-This tool uses Python and Selenium to scrape Facebook posts for specific keywords.
+Mashruucan wuxuu isticmaalaa Python si uu u soo uruuriyo, u nadiifiyo, kuna keydiyaa xogta warbaahinta iyo Facebook — meel keliya (SQLite Database).
 
-## Shuruudaha (Prerequisites)
-1.  **Python**: Make sure Python is installed.
-2.  **Chrome Browser**: Make sure Google Chrome is installed.
+---
 
-## Sida loo rakibo (Installation)
-Fur Command Prompt oo qor:
+## 📦 Shuruudaha (Prerequisites)
+1. **Python 3.9+**
+2. **Google Chrome** (Scraping-ga)
+
+## ⚙️ Rakibidda (Installation)
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🔄 Habka Shaqada (Workflow)
+
+```
+1. Scrape Xogta  →  2. Nadiifi / Kala Qaybi  →  3. Eeg & CSV Download
+```
+
+### Tallaabo 1 — Soo uruurso Xogta
 
 ```bash
-python -m pip install -r requirements.txt
-```
-
-## Sida loo wado (How to Run)
-Qor amarka soo socda:
-## All in one
-python main_dashboard.py
-
-     ## News Scraper
+# News & Social Media Scraper (wuu ku keydinayaa DB & CSV)
 python -X utf8 news_scraper_gui.py
 
-     ## Nadiifinta xogta
-python -X utf8 CrimeFilterTool.py
-
-     ## Facebook Scraper
-python -X utf8 facebook_scraper_clean.py
-
+# Facebook Crime Scraper (wuu ku keydinayaa DB & CSV)
 python facebook_scraper_gui.py
- 
-
-      ## Not Crime Scraper
-python not_crime_filter_gui.py
-
-
-     ## Split Data
-python -X utf8 split_crime_data.py
-
-     ## Data Separator
-python data_separator.py
-
-     ## Data Validator
-python data_validator_gui.py
-
-streamlit run app.py
-
-
-
 ```
 
-Process-ka:
-1.  Daaqad Chrome ah ayaa furmi doonta.
-2.  **Gacanta ku gal Facebook (Login manually)** 60 ilbiriqsi gudahood.
-3.  Barnaamijka ayaa bilaabi doona inuu raadiyo ereyada (keywords) oo keydiyo natiijada.
+### Tallaabo 2 — Nadiifi & Kala Qaybi
 
-## Natiijada (Output)
-Xogta waxaa lagu keydin doonaa fayl CSV ah: `facebook_data_TIMESTAMP.csv`.
+```bash
+# Crime Filter Tool — kaliya crime-related ayuu keydinayaa DB
+python -X utf8 CrimeFilterTool.py
+
+# Not Crime Filter — kaliya not crime-related ayuu keydinayaa DB
+python not_crime_filter_gui.py
+
+# Split Crime Data — labadaba kala saara oo DB ku keydinayaa
+python -X utf8 split_crime_data.py
+
+# Data Separator (GUI)
+python data_separator.py
+
+# Data Validator (GUI)
+python data_validator_gui.py
+```
+
+### Tallaabo 3 — Eeg Xogta & Soo Daaji CSV
+
+```bash
+# Dashboard cusub (Tkinter) — Xogta oo dhan eeg, shaandheey, CSV download
+python db_dashboard.py
+
+# Streamlit Dashboard (Web) — full web app
+streamlit run app.py
+
+# Main Dashboard — Dhammaan barnaamijyada meel ka bilow
+python main_dashboard.py
+```
+
+---
+
+## 🗄️ Database-ka (unified_scraper.db)
+
+Xogta **dhammaan barnaamijyada** waxay si toos ah ugu keydinayaan:
+- `unified_scraper.db` — SQLite database (local, degdeg)
+
+| Tiirka      | Sharaxaad                     |
+|-------------|-------------------------------|
+| `id`        | Lambarka gaarka ah            |
+| `url`       | Xiriirka maqaalka / postka    |
+| `text`      | Qoraalka oo dhan              |
+| `category`  | `crime-related` / `not crime-related` |
+| `source`    | Barnaamijka soo uruuriyay     |
+| `scraped_at`| Taariikhda la soo uruuriyay   |
+
+---
+
+## 📥 Soo Daajinta CSV (Export)
+
+### Hab 1 — Streamlit (Web)
+```bash
+streamlit run app.py
+```
+Fur: http://localhost:8501 → **"Xogta Database → Soo Daaji CSV"**
+
+### Hab 2 — Tkinter Dashboard
+```bash
+python db_dashboard.py
+```
+Dooro filter, taabo **"📥 Soo Daaji CSV"**
+
+---
+
+## 📂 Faylasha Muhiimka Ah
+
+| Faylka              | Shaqada                                 |
+|---------------------|-----------------------------------------|
+| `shared_db.py`      | Database module (wadaagta dhammaan)     |
+| `news_scraper_gui.py` | News & Social scraper                 |
+| `facebook_scraper_gui.py` | Facebook scraper               |
+| `CrimeFilterTool.py` | Crime-only filter                      |
+| `not_crime_filter_gui.py` | Not-crime filter               |
+| `split_crime_data.py` | Crime/NotCrime kala saar              |
+| `db_dashboard.py`   | Database viewer + CSV export (Tkinter)  |
+| `app.py`            | Web dashboard (Streamlit)               |
+| `main_dashboard.py` | Dhammaan barnaamijyada hal meel         |

@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from datetime import datetime
 import threading
+import shared_db
 
 # ── Crime keywords (Af-Soomaali) - We need them to identify what NOT to include.
 CRIME_KEYWORDS_HIGH = [
@@ -111,6 +112,14 @@ class NotCrimeFilterApp:
             
             # Save
             df_not_crime.to_csv(out_file, index=False, encoding="utf-8-sig")
+            
+            # ── Keydi Database-ka
+            try:
+                rows = df_not_crime[['url','text','category']].to_dict('records')
+                shared_db.insert_many(rows, source="NotCrimeFilter")
+                db_msg = f"Database: {len(rows)} xog."
+            except Exception as db_err:
+                db_msg = f"DB khatar: {db_err}"
             
             total_records = len(df)
             not_crime_num = len(df_not_crime)

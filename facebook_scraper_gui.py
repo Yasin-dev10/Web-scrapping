@@ -8,6 +8,7 @@ from datetime import datetime
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
+import shared_db
 
 try:
     from selenium import webdriver
@@ -372,6 +373,13 @@ class FacebookScraperGUI(tk.Tk):
             self._log_msg(f"🎉 Saved to: {fname}", "ok")
         except Exception as e:
             self._log_msg(f"Failure to save CSV: {e}", "err")
+
+        # ── Keydi Database-ka ──────────────────────────────────────────
+        try:
+            shared_db.insert_many(self._items, source="Facebook-Scraper")
+            self._log_msg(f"🗄️  Database: {len(self._items)} xog ayaa lagu keydiiyey", "ok")
+        except Exception as e:
+            self._log_msg(f"⚠️  Database error: {e}", "err")
 
 if __name__ == "__main__":
     app = FacebookScraperGUI()

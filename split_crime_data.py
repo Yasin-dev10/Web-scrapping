@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from datetime import datetime
 import threading
+import shared_db
 
 # ── Crime keywords (Af-Soomaali) ────────────────────────────────────────────────
 CRIME_KEYWORDS_HIGH = [
@@ -163,6 +164,18 @@ class SplitDataApp(tk.Tk):
                 df_crime.to_csv(out_crime, index=False, encoding="utf-8-sig")
             if not df_not_crime.empty:
                 df_not_crime.to_csv(out_not_crime, index=False, encoding="utf-8-sig")
+
+            # ── Keydi Database-ka
+            db_added = 0
+            try:
+                if not df_crime.empty:
+                    shared_db.insert_many(df_crime[['url','text','category']].to_dict('records'), source="SplitTool-Crime")
+                    db_added += len(df_crime)
+                if not df_not_crime.empty:
+                    shared_db.insert_many(df_not_crime[['url','text','category']].to_dict('records'), source="SplitTool-NotCrime")
+                    db_added += len(df_not_crime)
+            except Exception as db_err:
+                db_added = f"err: {db_err}"
 
             total_records = len(df)
             crime_num = len(df_crime)
