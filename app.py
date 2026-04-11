@@ -110,37 +110,51 @@ elif choice == "8. Data Validator (Hubinta Xogta)":
             st.write(f"**Tirada:** {st.session_state.current_index + 1} / {total_rows}")
             
             st.markdown("### Qoraalka (Text):")
-            st.info(current_row['text'])
+            # Qoraalka oo wax laga badali karo (Editable Text)
+            st.text_area("Wax ka bedel qoraalka hoose, kadib taabo Crime ama Not Crime si uu u keydsamo:", value=current_row['text'], height=150, key="edit_text")
             
             st.markdown(f"**Category Hadda:** `{current_row['category']}`")
+            
+            # Meel cusub oo custom ah (Custom Tag)
+            st.text_input("Qor Category cusub haddii aadan rabin Crime/Not Crime (Tusaale: 'Siyaasad'):", key="edit_custom")
             
             st.write("---")
             col1, col2, col3, col4 = st.columns(4)
             
-            def update_db(post_id, new_cat):
+            def save_and_next(cat):
+                post_id = df.iloc[st.session_state.current_index]['id']
+                # Hel qoraalkii la bedelay iyo category-ga custom-ka ah
+                text_val = st.session_state.get('edit_text', df.iloc[st.session_state.current_index]['text'])
+                final_cat = st.session_state.get('edit_custom', '').strip()
+                
+                # Haddii qofka uu qoray category custom ah, qaado kiisa intii aad qaadan laheed badhanka
+                if final_cat != '':
+                    cat = final_cat
+                
                 c = get_connection()
                 cur = c.cursor()
-                cur.execute("UPDATE posts SET category=? WHERE id=?", (new_cat, post_id))
+                cur.execute("UPDATE posts SET category=?, text=? WHERE id=?", (cat, text_val, post_id))
                 c.commit()
                 c.close()
+                
+                # Nadiifi meesha custom-ka si uusan ugu dhegin row-ga xiga
+                st.session_state.edit_custom = ''
                 st.session_state.current_index += 1
             
-            with col1:
-                if st.button("🩸 Ka dhig: Crime"):
-                    update_db(current_row['id'], 'crime-related')
-                    st.rerun()
-            with col2:
-                if st.button("🟢 Ka dhig: Not Crime"):
-                    update_db(current_row['id'], 'not crime-related')
-                    st.rerun()
-            with col3:
-                if st.button("✅ Sax (Ku Dhaaf / Skip)"):
-                    st.session_state.current_index += 1
-                    st.rerun()
-            with col4:
-                if st.button("⬅️ Gadaal u noqo") and st.session_state.current_index > 0:
+            def step_back():
+                if st.session_state.current_index > 0:
                     st.session_state.current_index -= 1
-                    st.rerun()
+                    # Sidoo kale nadiifi qashinka si uusan u qasin text-gaagii hore
+                    st.session_state.edit_custom = ''
+            
+            with col1:
+                st.button("🩸 Ka dhig: Crime", on_click=save_and_next, args=('crime-related',))
+            with col2:
+                st.button("🟢 Ka dhig: Not Crime", on_click=save_and_next, args=('not crime-related',))
+            with col3:
+                st.button("✅ Ku Dhaaf / Save", on_click=save_and_next, args=(current_row['category'],))
+            with col4:
+                st.button("⬅️ Dib u nogo (Undo)", on_click=step_back)
         else:
             st.success("Waxaad dhamaysay dhammaan xogta ku jirta Database-ka! Hadda waxaad tagi kartaa Data Separator si aad u kala qaadato.")
             if st.button("Dib ugu noqo bilowga"):
