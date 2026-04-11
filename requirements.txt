@@ -4,3 +4,5 @@ requests
 beautifulsoup4
 pandas
 streamlit
+SQLAlchemy
+psycopg2-binary

@@ -131,9 +131,9 @@ elif choice == "8. Data Validator (Hubinta Xogta)":
                 if final_cat != '':
                     cat = final_cat
                 
+                from sqlalchemy import text
                 c = get_connection()
-                cur = c.cursor()
-                cur.execute("UPDATE posts SET category=?, text=? WHERE id=?", (cat, text_val, post_id))
+                c.execute(text("UPDATE posts SET category=:c, text=:t WHERE id=:id"), {"c": cat, "t": text_val, "id": int(post_id)})
                 c.commit()
                 c.close()
                 
