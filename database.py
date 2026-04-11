@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine, text
 from datetime import datetime
 
-# Direct Supabase URL (SQLAlchemy compatible)
-DB_URL = "postgresql://postgres:Yaasiin2026@db.pqxesutzhsufqpmazuqg.supabase.co:5432/postgres"
+# Direct Supabase URL (SQLAlchemy compatible, sslmode required)
+DB_URL = "postgresql+psycopg2://postgres:Yaasiin2026@db.pqxesutzhsufqpmazuqg.supabase.co:5432/postgres?sslmode=require"
 
 # Create a connection engine
-engine = create_engine(DB_URL)
+engine = create_engine(DB_URL, pool_pre_ping=True)
 
 def get_connection():
     # Return SQLAlchemy connection which Pandas supports natively
