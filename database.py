@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, text
 from datetime import datetime
 
-# Direct Supabase URL (SQLAlchemy compatible, sslmode required)
-DB_URL = "postgresql+psycopg2://postgres:Yaasiin2026@db.pqxesutzhsufqpmazuqg.supabase.co:5432/postgres?sslmode=require"
+# Direct Supabase URL (SQLAlchemy compatible, connection pooling, sslmode required)
+DB_URL = "postgresql+psycopg2://postgres.pqxesutzhsufqpmazuqg:Yaasiin2026@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?sslmode=require"
 
 # Create a connection engine
 engine = create_engine(DB_URL, pool_pre_ping=True)
