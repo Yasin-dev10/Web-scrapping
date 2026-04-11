@@ -28,7 +28,7 @@ menu = [
 choice = st.sidebar.selectbox("Dooro Qaybta Tool-ka aad rabto:", menu)
 
 st.sidebar.markdown("---")
-st.sidebar.write("### Waa nidaam loogu talo galay inaa scrapp ku sameyso     ")
+st.sidebar.write("### Waa nidaam loogu talo galay inaa scrapp ku sameyso ")
 
 if choice == "1. Dashboard (Xogta Guud)":
     st.subheader("Ku Soo Dhawow Web Dashboard-ka")
