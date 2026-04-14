@@ -145,6 +145,7 @@ menu = [
     "🌐 Web Scraper (Scrapp Halkan)",
     "📊 Xogta Database (Data View & CSV Download)",
     "📥 CSV Soo Geli Database",
+    "📝 Xog Gelin Gacanta (Manual Entry)",
     "✅ Data Validator (Hubinta Xogta)",
     "⚖️  Data Separator (Kala Saar & Balans)",
 ]
@@ -446,6 +447,40 @@ elif choice == "📥 CSV Soo Geli Database":
                 st.balloons()
                 st.success(f"Wadar: **{total_added}** xog ayaa lagu daray!")
                 st.rerun()
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  4.5 Manual Data Entry
+# ══════════════════════════════════════════════════════════════════════════════
+elif choice == "📝 Xog Gelin Gacanta (Manual Entry)":
+    st.title("📝 Xog Gelin Gacanta (Manual Entry)")
+    st.write("Halkan waxaad gacanta uga gelin kartaa xog kasta oo aad u baahantahay (Tusaale ahaan: qoraal aad meel kale ka soo koobiyeeysay).")
+
+    with st.form("manual_entry_form"):
+        m_url = st.text_input("URL (Ikhtiyaari):", placeholder="Tusaale: https://example.com/warka")
+        m_text = st.text_area("Qoraalka Xogta (Text):", height=200, placeholder="Halkan ku qor xogta...")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            m_cat = st.selectbox("Category:", ["crime-related", "not crime-related"])
+        with col2:
+            m_source = st.text_input("Source (Halka aad ka keentay):", value="Manual Entry")
+        
+        submitted = st.form_submit_button("💾 Keydi Xogta", type="primary")
+        
+        if submitted:
+            if not m_text.strip():
+                st.error("Fadlan qoraalka xogta waa muhiim in aad geliso!")
+            else:
+                try:
+                    row = [{
+                        "url": m_url.strip(),
+                        "text": m_text.strip(),
+                        "category": m_cat
+                    }]
+                    shared_db.insert_many(row, source=m_source.strip())
+                    st.success("✅ Xogta si guul ah ayaa loogu daray Database-ka!")
+                except Exception as e:
+                    st.error(f"Cillad ayaa dhacday: {e}")
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  5. Data Validator
